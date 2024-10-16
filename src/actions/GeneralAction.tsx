@@ -30,68 +30,63 @@ const setIsFirstTimeUse = () => {
 };
 
 const appStart = () => {
-  return (dispatch, getState) => {
-    StorageService.getFirstTimeUse().then(isFirstTimeUse => {
+  return async (dispatch, getState) => {
+    try {
+      // Get if it's the first time the user is using the app
+      const isFirstTimeUse = await StorageService.getFirstTimeUse();
       dispatch({
         type: SET_FIRST_TIME_USE,
-        payLoad: isFirstTimeUse ? false : true,
+        payLoad: !isFirstTimeUse,
       });
-    });
-    StorageService.getToken().then(token => {
+
+      // Get the token from storage
+      const token = await StorageService.getToken();
       if (token) {
         dispatch({
           type: SET_TOKEN,
           payLoad: token,
         });
-        UserService.getUserData().then(userResponse => {
-          if (userResponse.status) {
+
+        // Try fetching user data
+        const userResponse = await UserService.getUserData();
+        if (userResponse.status) {
+          dispatch({
+            type: SET_USER_DATA,
+            payLoad: userResponse.data,
+          });
+        } else if (userResponse.error?.message === 'TokenExpiredError') {
+          // Handle token expiration
+          const tokenResponse = await AuthenticationService.refreshToken();
+          if (tokenResponse.status) {
             dispatch({
-              type: SET_USER_DATA,
-              payLoad: userResponse.data,
+              type: SET_TOKEN,
+              payLoad: tokenResponse.data,
             });
-            dispatch({
-              type: SET_IS_APP_LOADING,
-              payLoad: false,
-            });
-          } else if (userResponse.error.message === 'TokenExpiredError') {
-            AuthenticationService.refreshToken().then(tokenResponse => {
-              if (tokenResponse.status) {
-                dispatch({
-                  type: SET_TOKEN,
-                  payLoad: tokenResponse.data,
-                });
-                UserService.getUserData().then(userResponse => {
-                  if (userResponse.status) {
-                    dispatch({
-                      type: SET_USER_DATA,
-                      payLoad: userResponse.data,
-                    });
-                    dispatch({
-                      type: SET_IS_APP_LOADING,
-                      payLoad: false,
-                    });
-                  }
-                });
-              }
-              else {
-                dispatch({
-                  type: SET_TOKEN,
-                  payLoad: tokenResponse.data,
-                });
-                dispatch({
-                  type: SET_IS_APP_LOADING,
-                  payLoad: false,
-                });
-              }
-            });
+            const refreshedUserResponse = await UserService.getUserData();
+            if (refreshedUserResponse.status) {
+              dispatch({
+                type: SET_USER_DATA,
+                payLoad: refreshedUserResponse.data,
+              });
+            }
           }
+        }
+      } else {
+        // No token found, reset to empty string
+        dispatch({
+          type: SET_TOKEN,
+          payLoad: '',
         });
       }
-    });
-    dispatch({
-      type: SET_TOKEN,
-      payLoad: '',
-    });
+    } catch (error) {
+      console.error('Error during app start:', error);
+    } finally {
+      // Ensure isAppLoading is set to false at the end
+      dispatch({
+        type: SET_IS_APP_LOADING,
+        payLoad: false,
+      });
+    }
   };
 };
 

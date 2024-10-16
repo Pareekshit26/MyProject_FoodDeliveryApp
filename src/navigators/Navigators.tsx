@@ -26,7 +26,7 @@ function Navigators() {
   useEffect(() => {
     dispatch(GeneralAction.appStart());
   }, []);
-  console.log('Navigation:', token);
+  // console.log('Navigation:', token);
 
   return (
     <NavigationContainer>
