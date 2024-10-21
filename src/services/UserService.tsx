@@ -4,7 +4,6 @@ import { authHeader } from '../utils/Generators';
 import { getToken } from '../Store';
 
 const getUserData = async () => {
-  console.log('get user data -> uesr servie');
   try {
     let body = {
       headers: authHeader(getToken()),

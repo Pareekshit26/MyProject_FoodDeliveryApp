@@ -17,4 +17,5 @@ export default {
   MARKER: require('../assets/images/marker.png'),
   EMPTY_CART: require('../assets/images/empty_cart.png'),
   AVATAR: require('../assets/images/user_avatar.png'),
+  PHONE: require('../assets/images/phone_in_talk.png'),
 };
