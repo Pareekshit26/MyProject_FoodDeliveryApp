@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ApiContants from '../contants/ApiContants';
-import { authHeader } from '../utils/Generators';
-import { getToken } from '../Store';
+import {authHeader} from '../utils/Generators';
+import {getToken} from '../Store';
 
 const getRestaurantData = async () => {
   console.log('Restaurant Service');
@@ -32,20 +32,20 @@ const getRestaurantData = async () => {
   }
 };
 
-const getRestaurantById = async (restaurantId: any) => {
-  console.log('Restaurant id: ', restaurantId);
-  try{
+const getOneRestaurantById = async restaurantId => {
+  console.log('RestaurantsService | getOneRestaurantById');
+  try {
     let restaurantResponse = await axios.get(
       `${ApiContants.BACKEND_API.BASE_API_URL}${ApiContants.BACKEND_API.RESTAURANT}/${restaurantId}`,
       {
         headers: authHeader(getToken()),
       },
     );
-    if (restaurantResponse.status === 200) {
+    if (restaurantResponse?.status === 200) {
       return {
         status: true,
-        message: 'Restaurant data fetched successfully',
-        data: restaurantResponse.data.data,
+        message: 'Restaurant data fetched',
+        data: restaurantResponse?.data?.data,
       };
     } else {
       return {
@@ -53,8 +53,7 @@ const getRestaurantById = async (restaurantId: any) => {
         message: 'Restaurant data not found',
       };
     }
-  }
-  catch (error) {
+  } catch (error) {
     return {
       status: false,
       message: 'Restaurant data not found',
@@ -62,4 +61,4 @@ const getRestaurantById = async (restaurantId: any) => {
   }
 };
 
-export default { getRestaurantData, getRestaurantById };
+export default {getRestaurantData, getOneRestaurantById};

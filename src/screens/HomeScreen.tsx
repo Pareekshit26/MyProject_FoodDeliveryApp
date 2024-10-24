@@ -35,7 +35,6 @@ const HomeScreen = ({navigation}: any) => {
     const unsubscribe = navigation.addListener('focus', () => {
       RestaurentService.getRestaurantData().then(response => {
         if (response?.status) {
-          // console.log('Fetched restaurant data:', response.data);
           setRestaurants(response.data);
         }
       });
@@ -121,23 +120,21 @@ const HomeScreen = ({navigation}: any) => {
           </View>
           <FlatList
             data={restaurants}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => {
               const posterUrl = StaticImageService.getPoster(
                 item.images.poster,
               );
-              // const logoUrl = StaticImageService.getLogo(item.images.logo);
-              // console.log('Poster URL:', posterUrl);
-              // console.log('Restart URL:', item);
-              // console.log('Logo URL:', logoUrl);
+
               return (
                 <TouchableOpacity
                   style={styles.restaurantListContainer}
-                  onPress={restaurantId =>
-                    navigation.navigate('Restaurants', {restaurantId})
-                  }>
+                  onPress={() =>
+                    navigation.navigate('Restaurants', {restaurantId: item.id})
+                  }
+                >
                   <Image source={{uri: posterUrl}} style={styles.poster} />
                   <Text style={styles.restaurantName}>{item.name}</Text>
                   <Text style={styles.tagText}>
@@ -220,7 +217,7 @@ const HomeScreen = ({navigation}: any) => {
         </View>
         {restaurants.map(item => {
           return (
-            <View style={styles.posterContainer}>
+            <View style={styles.posterContainer} key={item.id}>
               <View>
                 <Image
                   source={{uri: StaticImageService.getLogo(item.images.logo)}}

@@ -18,7 +18,7 @@ const getGalleryImage = (
   size,
   quality = ApiContants.STATIC_IMAGE.QUALITY.SD,
 ) => {
-  `${ApiContants.STATIC_IMAGE.BASE_URL}/gallery/${size}/${quality}/${imageId}.png`;
+  return `${ApiContants.STATIC_IMAGE.BASE_URL}/gallery/${size}/${quality}/${imageId}.png`;
 };
 
 export default {getFlatIcon, getLogo, getPoster, getGalleryImage};
