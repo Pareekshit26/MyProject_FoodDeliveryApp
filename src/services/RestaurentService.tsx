@@ -32,4 +32,34 @@ const getRestaurantData = async () => {
   }
 };
 
-export default { getRestaurantData };
+const getRestaurantById = async (restaurantId: any) => {
+  console.log('Restaurant id: ', restaurantId);
+  try{
+    let restaurantResponse = await axios.get(
+      `${ApiContants.BACKEND_API.BASE_API_URL}${ApiContants.BACKEND_API.RESTAURANT}/${restaurantId}`,
+      {
+        headers: authHeader(getToken()),
+      },
+    );
+    if (restaurantResponse.status === 200) {
+      return {
+        status: true,
+        message: 'Restaurant data fetched successfully',
+        data: restaurantResponse.data.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: 'Restaurant data not found',
+      };
+    }
+  }
+  catch (error) {
+    return {
+      status: false,
+      message: 'Restaurant data not found',
+    };
+  }
+};
+
+export default { getRestaurantData, getRestaurantById };

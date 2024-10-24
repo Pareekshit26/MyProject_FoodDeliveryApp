@@ -133,7 +133,11 @@ const HomeScreen = ({navigation}: any) => {
               // console.log('Restart URL:', item);
               // console.log('Logo URL:', logoUrl);
               return (
-                <TouchableOpacity style={styles.restaurantListContainer}>
+                <TouchableOpacity
+                  style={styles.restaurantListContainer}
+                  onPress={restaurantId =>
+                    navigation.navigate('Restaurants', {restaurantId})
+                  }>
                   <Image source={{uri: posterUrl}} style={styles.poster} />
                   <Text style={styles.restaurantName}>{item.name}</Text>
                   <Text style={styles.tagText}>

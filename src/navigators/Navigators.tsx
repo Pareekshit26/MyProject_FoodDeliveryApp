@@ -10,6 +10,7 @@ import ForgorPasswordScreen from '../screens/ForgotPasswordScreen';
 import PhoneRegisterScreen from '../screens/PhoneRegisterScreen';
 import VerificationScreen from '../screens/VerificationScreen';
 import HomeScreen from '../screens/HomeScreen';
+import Restaurants from '../screens/RestaurantScreen';
 
 import { useDispatch, useSelector } from 'react-redux';
 import GeneralAction from '../actions/GeneralAction';
@@ -52,7 +53,10 @@ function Navigators() {
             <Stack.Screen name="Verification" component={VerificationScreen} />
           </>
         ) : (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Restaurants" component={Restaurants} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
